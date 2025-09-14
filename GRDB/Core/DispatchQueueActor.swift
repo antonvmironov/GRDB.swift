@@ -43,3 +43,5 @@ private final class DispatchQueueExecutor: SerialExecutor {
         dispatchPrecondition(condition: .onQueue(queue))
     }
 }
+
+extension DispatchWorkItemFlags: @retroactive @unchecked Sendable {}
