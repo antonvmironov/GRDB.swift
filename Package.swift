@@ -48,6 +48,7 @@ let package = Package(
             path: "GRDBSQLite",
             publicHeadersPath: ".",
             cSettings: [
+                .define("SQLITE_CORE", to: "1"),
                 .define("SQLITE_DEFAULT_MEMSTATUS", to: "0"),
                 .define("SQLITE_ENABLE_FTS5", to: "1"),
                 .define("SQLITE_ENABLE_JSON1", to: "1"),
