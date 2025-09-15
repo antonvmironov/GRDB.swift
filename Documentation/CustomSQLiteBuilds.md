@@ -18,7 +18,6 @@ GRDB builds SQLite with [swiftlyfalling/SQLiteLib](https://github.com/swiftlyfal
     ```sh
     cd [GRDB directory]
     git checkout [latest tag]
-    git submodule update --init SQLiteCustom/src
     ```
 
 2. Choose your [extra compilation options](https://www.sqlite.org/compile.html). For example, `SQLITE_ENABLE_FTS5`, `SQLITE_ENABLE_PREUPDATE_HOOK`.

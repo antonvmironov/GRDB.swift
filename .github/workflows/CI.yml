@@ -13,7 +13,6 @@ on:
       - '.github/workflows/**'
       - 'Makefile'
       - 'Package.swift'
-      - 'SQLiteCustom/src'
   pull_request:
     paths:
       - 'GRDB/**'
@@ -21,7 +20,6 @@ on:
       - '.github/workflows/**'
       - 'Makefile'
       - 'Package.swift'
-      - 'SQLiteCustom/src'
 
 concurrency: 
   group: ${{ github.ref_name }}
