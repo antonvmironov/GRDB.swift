@@ -64,6 +64,7 @@ let package = Package(
                 .define("SQLITE_USE_ALLOCA", to: "1"),
                 .define("SQLITE_EXTRA_AUTOEXT", to: "autoload_custom"),
                 .define("SQLITE_VEC_STATIC", to: "1"),
+                .define("GRDB_LINUX", .when(platforms: [.linux])),
                 ],
             linkerSettings: [
                 .linkedLibrary("pthread", .when(platforms: [.linux])),

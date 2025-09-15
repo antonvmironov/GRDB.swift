@@ -4,7 +4,7 @@
 # the GRDB.swift package. It's optimized for CI/CD and includes all
 # necessary tools for testing and reporting.
 
-FROM swift:6.1-jammy
+FROM swift:6.1-noble
 
 # Set environment variables
 ENV DEBIAN_FRONTEND=noninteractive
