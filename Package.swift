@@ -43,9 +43,31 @@ let package = Package(
     ],
     dependencies: dependencies,
     targets: [
-        .systemLibrary(
+        .target(
             name: "GRDBSQLite",
-            providers: [.apt(["libsqlite3-dev"])]),
+            publicHeadersPath: ".",
+            cSettings: [
+                .define("SQLITE_DEFAULT_MEMSTATUS", to: "0"),
+                .define("SQLITE_ENABLE_FTS5", to: "1"),
+                .define("SQLITE_ENABLE_JSON1", to: "1"),
+                .define("SQLITE_ENABLE_SNAPSHOT", to: "1"),
+                .define("SQLITE_EXTRA_INIT", to: "autoload_uuid"),
+                .define("SQLITE_OMIT_DEPRECATED", to: "1"),
+                .define("SQLITE_THREADSAFE", to: "1"),
+                .define("SQLITE_ENABLE_PREUPDATE_HOOK", to: "1"),
+                .define("SQLITE_ENABLE_SESSION", to: "1"),
+                .define("SQLITE_ENABLE_RTREE", to: "1"),
+                .define("SQLITE_ENABLE_COLUMN_METADATA", to: "1"),
+                .define("SQLITE_SECURE_DELETE", to: "1"),
+                .define("SQLITE_SOUNDEX", to: "1"),
+                .define("SQLITE_USE_ALLOCA", to: "1"),
+                .define("SQLITE_EXTRA_AUTOEXT", to: "sqlite3_uuid_init,sqlite3_vec_init"),
+            ],
+            linkerSettings: [
+                .linkedLibrary("pthread", .when(platforms: [.linux])),
+                .linkedLibrary("dl",      .when(platforms: [.linux])),
+            ]
+        ),
         .target(
             name: "GRDB",
             dependencies: ["GRDBSQLite"],
