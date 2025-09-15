@@ -10,8 +10,7 @@ import SQLite3
 #if canImport(string_h)
 import string_h
 #elseif os(Linux)
-@_silgen_name("strcmp")
-func strcmp(_ s1: UnsafePointer<CChar>!, _ s2: UnsafePointer<CChar>!) -> CInt
+import Glibc
 #elseif os(macOS) || os(iOS) || os(watchOS) || os(tvOS) || os(visionOS)
 import Darwin
 #elseif os(Windows)
