@@ -1,3 +1,7 @@
+#if canImport(Dispatch)
+import Dispatch
+#endif
+
 import XCTest
 @testable import GRDB
 
@@ -232,7 +236,7 @@ class DatabaseSnapshotTests: GRDBTestCase {
             
             // This test CAN break in future releases: the dispatch queue labels
             // are documented to be a debug-only tool.
-            let label = String(utf8String: __dispatch_queue_get_label(nil))
+            let label = getQueueLabel(nil)
             XCTAssertEqual(label, "GRDB.DatabasePool.snapshot.1")
         }
         
@@ -243,7 +247,7 @@ class DatabaseSnapshotTests: GRDBTestCase {
             
             // This test CAN break in future releases: the dispatch queue labels
             // are documented to be a debug-only tool.
-            let label = String(utf8String: __dispatch_queue_get_label(nil))
+            let label = getQueueLabel(nil)
             XCTAssertEqual(label, "GRDB.DatabasePool.snapshot.2")
         }
     }
@@ -259,7 +263,7 @@ class DatabaseSnapshotTests: GRDBTestCase {
             
             // This test CAN break in future releases: the dispatch queue labels
             // are documented to be a debug-only tool.
-            let label = String(utf8String: __dispatch_queue_get_label(nil))
+            let label = getQueueLabel(nil)
             XCTAssertEqual(label, "Toreador.snapshot.1")
         }
         
@@ -270,7 +274,7 @@ class DatabaseSnapshotTests: GRDBTestCase {
             
             // This test CAN break in future releases: the dispatch queue labels
             // are documented to be a debug-only tool.
-            let label = String(utf8String: __dispatch_queue_get_label(nil))
+            let label = getQueueLabel(nil)
             XCTAssertEqual(label, "Toreador.snapshot.2")
         }
     }

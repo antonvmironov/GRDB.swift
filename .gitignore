@@ -115,3 +115,5 @@ Tests/SPM/Packages
 
 # Test products
 Tests/products
+reports/summary.json
+reports/summary.txt

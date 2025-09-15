@@ -1,0 +1,48 @@
+services:
+  grdb-swift-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grdb-swift-test
+    volumes:
+      # Mount source code
+      - .:/workspace
+      # Mount reports directory to persist results
+      - ./reports:/workspace/reports
+    working_dir: /workspace
+    environment:
+      - SWIFT_LOG_LEVEL=info
+      - SQLITE_ENABLE_PREUPDATE_HOOK=1
+    # Default command runs the test script
+    command: ["python3", "./run_all_tests.py"]
+
+  # Service for running tests in watch mode (optional)
+  grdb-swift-watch:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grdb-swift-watch
+    volumes:
+      - .:/workspace
+      - ./reports:/workspace/reports
+    working_dir: /workspace
+    environment:
+      - SWIFT_LOG_LEVEL=info
+      - SQLITE_ENABLE_PREUPDATE_HOOK=1
+    command: >
+      /bin/bash -c "
+        echo 'Starting watch mode for GRDB.swift...'
+        while true; do
+          echo 'Running tests...'
+          python3 ./run_all_tests.py
+          echo 'Waiting 30 seconds before next run...'
+          sleep 30
+        done
+      "
+    profiles:
+      - watch
+
+# Named volumes for persistence (optional)
+volumes:
+  grdb-cache:
+    driver: local
