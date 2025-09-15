@@ -133,7 +133,7 @@ test_framework_GRDBtvOS_minTarget:
 	  $(TEST_ACTIONS) \
 	  $(XCPRETTY)
 
-test_framework_GRDBCustomSQLiteOSX: SQLiteCustom
+test_framework_GRDBCustomSQLiteOSX:
 	$(XCODEBUILD) \
 	  -project GRDBCustom.xcodeproj \
 	  -scheme GRDBCustom \
@@ -143,7 +143,7 @@ test_framework_GRDBCustomSQLiteOSX: SQLiteCustom
 
 test_framework_GRDBCustomSQLiteiOS: test_framework_GRDBCustomSQLiteiOS_maxTarget test_framework_GRDBCustomSQLiteiOS_minTarget
 
-test_framework_GRDBCustomSQLiteiOS_maxTarget: SQLiteCustom
+test_framework_GRDBCustomSQLiteiOS_maxTarget:
 	$(XCODEBUILD) \
 	  -project GRDBCustom.xcodeproj \
 	  -scheme GRDBCustom \
@@ -151,7 +151,7 @@ test_framework_GRDBCustomSQLiteiOS_maxTarget: SQLiteCustom
 	  $(TEST_ACTIONS) \
 	  $(XCPRETTY)
 
-test_framework_GRDBCustomSQLiteiOS_minTarget: SQLiteCustom
+test_framework_GRDBCustomSQLiteiOS_minTarget:
 	$(XCODEBUILD) \
 	  -project GRDBCustom.xcodeproj \
 	  -scheme GRDBCustom \
@@ -326,7 +326,7 @@ test_install_SPM_ios_release:
 	  clean build \
 	  $(XCPRETTY)
 
-test_install_customSQLite: SQLiteCustom
+test_install_customSQLite:
 	$(XCODEBUILD) \
 	  -project Tests/CustomSQLite/CustomSQLite.xcodeproj \
 	  -scheme CustomSQLite \
@@ -392,21 +392,6 @@ test_performance:
 	  -destination "platform=macOS" \
 	  build-for-testing test-without-building
 
-# Target that setups SQLite custom builds with extra compilation options.
-SQLiteCustom: SQLiteCustom/src/sqlite3.h
-	echo '/* Makefile generated */' > SQLiteCustom/GRDBCustomSQLite-USER.h
-	echo '#define SQLITE_ENABLE_PREUPDATE_HOOK' >> SQLiteCustom/GRDBCustomSQLite-USER.h
-	echo '#define SQLITE_ENABLE_FTS5' >> SQLiteCustom/GRDBCustomSQLite-USER.h
-	echo '#define SQLITE_ENABLE_SNAPSHOT' >> SQLiteCustom/GRDBCustomSQLite-USER.h
-	echo '// Makefile generated' > SQLiteCustom/GRDBCustomSQLite-USER.xcconfig
-	echo 'CUSTOM_OTHER_SWIFT_FLAGS = -D SQLITE_ENABLE_PREUPDATE_HOOK -D SQLITE_ENABLE_FTS5 -D SQLITE_ENABLE_SNAPSHOT' >> SQLiteCustom/GRDBCustomSQLite-USER.xcconfig
-	echo '// Makefile generated' > SQLiteCustom/src/SQLiteLib-USER.xcconfig
-	echo 'CUSTOM_SQLLIBRARY_CFLAGS = -DSQLITE_ENABLE_PREUPDATE_HOOK -DSQLITE_ENABLE_FTS5 -DSQLITE_ENABLE_SNAPSHOT' >> SQLiteCustom/src/SQLiteLib-USER.xcconfig
-
-# Makes sure the SQLiteCustom/src submodule has been downloaded
-SQLiteCustom/src/sqlite3.h:
-	$(GIT) submodule update --init SQLiteCustom/src
-
 
 # Documentation
 # =============
@@ -445,7 +430,6 @@ doc:
 distclean:
 	$(GIT) reset --hard
 	$(GIT) clean -dffx .
-	rm -rf SQLiteCustom/src && $(GIT) checkout -- SQLiteCustom/src
 
 clean:
 	$(SWIFT) package reset
@@ -453,4 +437,4 @@ clean:
 	rm -rf $(DOCS_PATH)
 	find . -name Package.resolved | xargs rm -f
 
-.PHONY: distclean clean doc test smokeTest SQLiteCustom
+.PHONY: distclean clean doc test smokeTest
