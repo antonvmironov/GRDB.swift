@@ -45,6 +45,7 @@ let package = Package(
     targets: [
         .target(
             name: "GRDBSQLite",
+            path: "GRDBSQLite",
             publicHeadersPath: ".",
             cSettings: [
                 .define("SQLITE_DEFAULT_MEMSTATUS", to: "0"),
@@ -60,7 +61,7 @@ let package = Package(
                 .define("SQLITE_SECURE_DELETE", to: "1"),
                 .define("SQLITE_SOUNDEX", to: "1"),
                 .define("SQLITE_USE_ALLOCA", to: "1"),
-                .define("SQLITE_EXTRA_AUTOEXT", to: "sqlite3_uuid_init,sqlite3_vec_init"),
+                .define("SQLITE_EXTRA_AUTOEXT", to: "autoload_custom"),
                 .define("SQLITE_VEC_STATIC", to: "1"),
                 ],
             linkerSettings: [

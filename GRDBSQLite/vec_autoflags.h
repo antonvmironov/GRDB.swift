@@ -1,4 +1,3 @@
-// Sources/CSQLite/vec_autoflags.h
 #pragma once
 
 #if (defined(__x86_64__) || defined(_M_X64)) && !defined(SQLITE_VEC_ENABLE_AVX)
