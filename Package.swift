@@ -51,7 +51,6 @@ let package = Package(
                 .define("SQLITE_ENABLE_FTS5", to: "1"),
                 .define("SQLITE_ENABLE_JSON1", to: "1"),
                 .define("SQLITE_ENABLE_SNAPSHOT", to: "1"),
-                .define("SQLITE_EXTRA_INIT", to: "autoload_uuid"),
                 .define("SQLITE_OMIT_DEPRECATED", to: "1"),
                 .define("SQLITE_THREADSAFE", to: "1"),
                 .define("SQLITE_ENABLE_PREUPDATE_HOOK", to: "1"),
@@ -62,7 +61,8 @@ let package = Package(
                 .define("SQLITE_SOUNDEX", to: "1"),
                 .define("SQLITE_USE_ALLOCA", to: "1"),
                 .define("SQLITE_EXTRA_AUTOEXT", to: "sqlite3_uuid_init,sqlite3_vec_init"),
-            ],
+                .define("SQLITE_VEC_STATIC", to: "1"),
+                ],
             linkerSettings: [
                 .linkedLibrary("pthread", .when(platforms: [.linux])),
                 .linkedLibrary("dl",      .when(platforms: [.linux])),
