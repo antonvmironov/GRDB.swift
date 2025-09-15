@@ -227,96 +227,6 @@ def build_sqlite_custom() -> bool:
         # Don't fail - SPM will handle this
         return True
 
-def patch_test_files() -> None:
-    """
-    Patch test files for platform compatibility.
-    This function handles differences between macOS and Linux environments.
-    """
-    print_step("Patching test files for platform compatibility...")
-    
-    # Check if we're running on Linux
-    if platform.system() != "Linux":
-        print_step("Not running on Linux, skipping patches")
-        return
-    
-    try:
-        # Copy our patch files to override the test files
-        patches_dir = Path("patches")
-        if patches_dir.exists():
-            # Copy CGFloatTests.swift
-            cgfloat_patch = patches_dir / "CGFloatTests.swift"
-            cgfloat_test = Path("Tests/GRDBTests/CGFloatTests.swift")
-            if cgfloat_patch.exists() and cgfloat_test.exists():
-                print_step(f"Copying patched {cgfloat_test.name}...")
-                shutil.copy(cgfloat_patch, cgfloat_test)
-                print_success(f"Patched {cgfloat_test}")
-            
-            # Copy DispatchQueueLabel.swift to Tests/GRDBTests/Support
-            dispatch_patch = patches_dir / "DispatchQueueLabel.swift"
-            support_dir = Path("Tests/GRDBTests/Support")
-            support_dir.mkdir(exist_ok=True)
-            dispatch_target = support_dir / "DispatchQueueLabel.swift"
-            
-            if dispatch_patch.exists():
-                print_step(f"Copying {dispatch_patch.name} to {support_dir}...")
-                shutil.copy(dispatch_patch, dispatch_target)
-                print_success(f"Added {dispatch_target}")
-                
-            # Patch DatabaseSnapshotTests.swift to use getQueueLabel
-            db_snapshot_test = Path("Tests/GRDBTests/DatabaseSnapshotTests.swift")
-            if db_snapshot_test.exists():
-                print_step(f"Patching {db_snapshot_test.name}...")
-                with open(db_snapshot_test, "r") as f:
-                    content = f.read()
-                
-                # Replace the __dispatch_queue_get_label calls with our wrapper
-                patched_content = re.sub(
-                    r'String\(utf8String: __dispatch_queue_get_label\(nil\)\)',
-                    'getQueueLabel(nil)',
-                    content
-                )
-                
-                # Add import for our support file
-                if "#if canImport(Dispatch)" not in patched_content:
-                    patched_content = "#if canImport(Dispatch)\nimport Dispatch\n#endif\n\n" + patched_content
-                
-                # Write the patched file
-                with open(db_snapshot_test, "w") as f:
-                    f.write(patched_content)
-                
-                print_success(f"Patched {db_snapshot_test}")
-        else:
-            # Fallback to in-place patching if patches directory doesn't exist
-            cgfloat_test = Path("Tests/GRDBTests/CGFloatTests.swift")
-            if cgfloat_test.exists():
-                print_step(f"Patching {cgfloat_test}...")
-                
-                # Read the file content
-                with open(cgfloat_test, "r") as f:
-                    content = f.read()
-                
-                # Replace CoreGraphics import with conditional import
-                patched_content = content.replace(
-                    'import CoreGraphics',
-                    '#if canImport(CoreGraphics)\nimport CoreGraphics\n#endif'
-                )
-                
-                # Make the test conditional on platform
-                patched_content = patched_content.replace(
-                    'class CGFloatTests: GRDBTestCase {',
-                    '#if canImport(CoreGraphics)\nclass CGFloatTests: GRDBTestCase {\n#else\n// CGFloat tests are skipped on Linux\nclass CGFloatTests {}\n#endif'
-                )
-                
-                # Write the patched file
-                with open(cgfloat_test, "w") as f:
-                    f.write(patched_content)
-                
-                print_success(f"Patched {cgfloat_test}")
-        
-        print_success("Test files patched for platform compatibility")
-    except Exception as e:
-        print_warning(f"Failed to patch test files: {e}")
-
 def generate_summary_report(results: Dict, reports_dir: Path) -> None:
     """
     Generate a summary report of all build and test results.
@@ -471,9 +381,6 @@ def main() -> int:
 
     # Setup directories
     reports_dir = setup_reports_directory(args.report_path)
-    
-    # Patch test files for platform compatibility
-    patch_test_files()
     
     # Track test results
     results = {}

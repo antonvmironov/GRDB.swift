@@ -1,26 +1,24 @@
 #if canImport(CoreGraphics)
-import CoreGraphics
 import XCTest
+import CoreGraphics
 import GRDB
 
 class CGFloatTests: GRDBTestCase {
-    
-    func testCGFloat() throws {
+
+    func testCGFLoat() throws {
         let dbQueue = try makeDatabaseQueue()
         try dbQueue.inDatabase { db in
-            try db.execute("CREATE TABLE test(name TEXT, age REAL)")
-            let value: CGFloat = 20.5
-            try db.execute("INSERT INTO test(name, age) VALUES(?, ?)", arguments: ["Arthur", value])
-            
-            var rows = try Row.fetchAll(db, "SELECT * FROM test")
-            XCTAssertEqual(rows.count, 1)
-            XCTAssertEqual(rows[0]["name"] as String, "Arthur")
-            XCTAssertEqual(rows[0]["age"] as Double, Double(value))
-            
-            rows = try Row.fetchAll(db, "SELECT * FROM test WHERE age = ?", arguments: [value])
-            XCTAssertEqual(rows.count, 1)
-            XCTAssertEqual(rows[0]["name"] as String, "Arthur")
-            XCTAssertEqual(rows[0]["age"] as Double, Double(value))
+            try db.execute(sql: "CREATE TABLE points (x DOUBLE, y DOUBLE)")
+
+            let x: CGFloat = 1
+            let y: CGFloat? = nil
+            try db.execute(sql: "INSERT INTO points VALUES (?,?)", arguments: [x, y])
+
+            let row = try Row.fetchOne(db, sql: "SELECT * FROM points")!
+            let fetchedX: CGFloat = row["x"]
+            let fetchedY: CGFloat? = row["y"]
+            XCTAssertEqual(x, fetchedX)
+            XCTAssertTrue(fetchedY == nil)
         }
     }
 }
